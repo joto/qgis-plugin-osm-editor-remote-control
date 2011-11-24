@@ -1,0 +1,8 @@
+
+This is a QGIS plugin. It gives you a button in QGIS that sends a command to a
+running OSM editor (JOSM and Merkaartor support this) to open the current map
+view and download OSM data into the editor.
+
+More about the remote control feature:
+http://wiki.openstreetmap.org/wiki/JOSM/Plugins/RemoteControl
+
