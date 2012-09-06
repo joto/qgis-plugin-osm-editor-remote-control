@@ -1,0 +1,13 @@
+[general]
+name=OSMEditorRemoteControl
+qgisMinimumVersion=1.5
+description=OSM Editor remote control.
+version=version 1.0
+
+tags=osm,openstreetmap,josm
+
+repository=https://github.com/joto/qgis-plugin-osm-editor-remote-control
+icon=icon.png
+
+experimental=False
+deprecated=False

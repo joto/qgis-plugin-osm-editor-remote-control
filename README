@@ -4,5 +4,8 @@ running OSM editor (JOSM and Merkaartor support this) to open the current map
 view and download OSM data into the editor.
 
 More about the remote control feature:
-http://wiki.openstreetmap.org/wiki/JOSM/Plugins/RemoteControl
+http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl
+
+This plugin is available under the same license as QGIS itself:
+http://www.gnu.org/licenses/old-licenses/lgpl-2.0.html
 
