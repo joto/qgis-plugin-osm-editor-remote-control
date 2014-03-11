@@ -2,7 +2,7 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from qgis.core import *
-from urllib import *
+import urllib
 # initialize Qt resources from file resouces.py
 import resources
 class OSMEditorRemoteControlPlugin:
@@ -36,6 +36,12 @@ class OSMEditorRemoteControlPlugin:
     url = 'http://localhost:8111/load_and_zoom?left=%f&right=%f&top=%f&bottom=%f' % (extent.xMinimum(), extent.xMaximum(), extent.yMaximum(), extent.yMinimum())
     print "OSMEditorRemoteControl plugin calling " + url
     try:
-      urlopen(url)
+      f = urllib.urlopen(url, proxies={})
+      result = f.read()
+      f.close()
+      if result.strip().upper() != 'OK':
+        raise Exception('Bad OSM call result: %s' % result)
     except IOError:
       QMessageBox.warning(self.iface.mainWindow(), "OSM Editor Remote Control Plugin", "Could not connect to the OSM editor. Did you start it?")
+    except Exception, e:
+      QMessageBox.warning(self.iface.mainWindow(), str(e))
