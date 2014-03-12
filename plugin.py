@@ -20,11 +20,15 @@ class OSMEditorRemoteControlPlugin:
   def unload(self):
     self.iface.removeToolBarIcon(self.action)
   def getLonLatExtent(self):
-    extent = self.iface.mapCanvas().mapRenderer().extent()
-    layer = self.iface.mapCanvas().currentLayer()
+    map_canvas = self.iface.mapCanvas()
+    extent = map_canvas.mapRenderer().extent()
+    #~ if map_canvas.hasCrsTransformEnabled():
+    layer = map_canvas.currentLayer()
     crs_map = layer.crs()
-    crs_4326 = QgsCoordinateReferenceSystem(4326, QgsCoordinateReferenceSystem.EpsgCrsId)
-    return QgsCoordinateTransform(crs_map, crs_4326).transform(extent)
+    if crs_map.authid() != u'EPSG:4326':
+        crs_4326 = QgsCoordinateReferenceSystem(4326, QgsCoordinateReferenceSystem.EpsgCrsId)
+        return QgsCoordinateTransform(crs_map, crs_4326).transform(extent)
+    return extent
   def changeStatus(self):
     if self.iface.mapCanvas().currentLayer() == None:
       self.action.setEnabled(False);
@@ -40,8 +44,8 @@ class OSMEditorRemoteControlPlugin:
       result = f.read()
       f.close()
       if result.strip().upper() != 'OK':
-        raise Exception('Bad OSM call result: %s' % result)
+        self.reportError("OSM reported: %s" % result)
     except IOError:
-      QMessageBox.warning(self.iface.mainWindow(), "OSM Editor Remote Control Plugin", "Could not connect to the OSM editor. Did you start it?")
-    except Exception, e:
-      QMessageBox.warning(self.iface.mainWindow(), str(e))
+      self.reportError("Could not connect to the OSM editor. Did you start it?")
+  def reportError(self, errorMessage):
+      QMessageBox.warning(self.iface.mainWindow(), "OSM Editor Remote Control Plugin", errorMessage)
