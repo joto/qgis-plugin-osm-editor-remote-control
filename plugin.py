@@ -5,6 +5,11 @@ from qgis.core import *
 import urllib
 # initialize Qt resources from file resouces.py
 import resources
+
+# This value is very permissive and unlikely to work in high data-density areas
+# 0.0015 sq deg seems to be reasonable for cities
+MAX_DOWLOAD_AREA_DEG = 0.1
+
 class OSMEditorRemoteControlPlugin:
   def __init__(self, iface):
     self.iface = iface
@@ -35,7 +40,8 @@ class OSMEditorRemoteControlPlugin:
       self.action.setEnabled(False);
     else:
       extent = self.getLonLatExtent()
-      self.action.setEnabled(extent.width() * extent.height() < 0.1)
+      self.action.setEnabled(extent.width() * extent.height() < MAX_DOWLOAD_AREA_DEG)
+      print extent.width() * extent.height()
   def run(self):
     extent = self.getLonLatExtent()
     url = 'http://localhost:8111/load_and_zoom?left=%f&right=%f&top=%f&bottom=%f' % (extent.xMinimum(), extent.xMaximum(), extent.yMaximum(), extent.yMinimum())
