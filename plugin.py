@@ -2,9 +2,14 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from qgis.core import *
-from urllib import *
+import urllib
 # initialize Qt resources from file resouces.py
 import resources
+
+# This value is very permissive and unlikely to work in high data-density areas
+# 0.0015 sq deg seems to be reasonable for cities
+MAX_DOWLOAD_AREA_DEG = 0.1
+
 class OSMEditorRemoteControlPlugin:
   def __init__(self, iface):
     self.iface = iface
@@ -20,22 +25,33 @@ class OSMEditorRemoteControlPlugin:
   def unload(self):
     self.iface.removeToolBarIcon(self.action)
   def getLonLatExtent(self):
-    extent = self.iface.mapCanvas().mapRenderer().extent()
-    layer = self.iface.mapCanvas().currentLayer()
-    crs_map = layer.crs()
-    crs_4326 = QgsCoordinateReferenceSystem(4326, QgsCoordinateReferenceSystem.EpsgCrsId)
-    return QgsCoordinateTransform(crs_map, crs_4326).transform(extent)
+    map_canvas = self.iface.mapCanvas()
+    extent = map_canvas.mapRenderer().extent()
+    if map_canvas.hasCrsTransformEnabled():
+        crs_map = map_canvas.mapRenderer().destinationCrs()
+    else:
+        crs_map = map_canvas.currentLayer().crs()
+    if crs_map.authid() != u'EPSG:4326':
+        crs_4326 = QgsCoordinateReferenceSystem(4326, QgsCoordinateReferenceSystem.EpsgCrsId)
+        return QgsCoordinateTransform(crs_map, crs_4326).transform(extent)
+    return extent
   def changeStatus(self):
     if self.iface.mapCanvas().currentLayer() == None:
       self.action.setEnabled(False);
     else:
       extent = self.getLonLatExtent()
-      self.action.setEnabled(extent.width() * extent.height() < 0.1)
+      self.action.setEnabled(extent.width() * extent.height() < MAX_DOWLOAD_AREA_DEG)
   def run(self):
     extent = self.getLonLatExtent()
     url = 'http://localhost:8111/load_and_zoom?left=%f&right=%f&top=%f&bottom=%f' % (extent.xMinimum(), extent.xMaximum(), extent.yMaximum(), extent.yMinimum())
     print "OSMEditorRemoteControl plugin calling " + url
     try:
-      urlopen(url)
+      f = urllib.urlopen(url, proxies={})
+      result = f.read()
+      f.close()
+      if result.strip().upper() != 'OK':
+        self.reportError("OSM reported: %s" % result)
     except IOError:
-      QMessageBox.warning(self.iface.mainWindow(), "OSM Editor Remote Control Plugin", "Could not connect to the OSM editor. Did you start it?")
+      self.reportError("Could not connect to the OSM editor. Did you start it?")
+  def reportError(self, errorMessage):
+      QMessageBox.warning(self.iface.mainWindow(), "OSM Editor Remote Control Plugin", errorMessage)
