@@ -26,9 +26,9 @@ class OSMEditorRemoteControlPlugin:
     self.iface.removeToolBarIcon(self.action)
   def getLonLatExtent(self):
     map_canvas = self.iface.mapCanvas()
-    extent = map_canvas.mapRenderer().extent()
+    extent = map_canvas.mapSettings().extent()
     if map_canvas.hasCrsTransformEnabled():
-        crs_map = map_canvas.mapRenderer().destinationCrs()
+        crs_map = map_canvas.mapSettings().destinationCrs()
     else:
         crs_map = map_canvas.currentLayer().crs()
     if crs_map.authid() != u'EPSG:4326':
@@ -45,13 +45,14 @@ class OSMEditorRemoteControlPlugin:
     extent = self.getLonLatExtent()
     url = 'http://localhost:8111/load_and_zoom?left=%f&right=%f&top=%f&bottom=%f' % (extent.xMinimum(), extent.xMaximum(), extent.yMaximum(), extent.yMinimum())
     print "OSMEditorRemoteControl plugin calling " + url
-    try:
+    #~ try:
+    if True:
       f = urllib.urlopen(url, proxies={})
       result = f.read()
       f.close()
       if result.strip().upper() != 'OK':
         self.reportError("OSM reported: %s" % result)
-    except IOError:
-      self.reportError("Could not connect to the OSM editor. Did you start it?")
+    #~ except IOError:
+      #~ self.reportError("Could not connect to the OSM editor. Did you start it?")
   def reportError(self, errorMessage):
       QMessageBox.warning(self.iface.mainWindow(), "OSM Editor Remote Control Plugin", errorMessage)
