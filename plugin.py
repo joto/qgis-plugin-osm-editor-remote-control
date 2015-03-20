@@ -32,11 +32,12 @@ class OSMEditorRemoteControlPlugin:
     else:
         crs_map = map_canvas.currentLayer().crs()
     if crs_map.authid() != u'EPSG:4326':
-        crs_4326 = QgsCoordinateReferenceSystem(4326, QgsCoordinateReferenceSystem.EpsgCrsId)
+        crs_4326 = QgsCoordinateReferenceSystem()
+        crs_4326.createFromSrid(4326)
         return QgsCoordinateTransform(crs_map, crs_4326).transform(extent)
     return extent
   def changeStatus(self):
-    if self.iface.mapCanvas().currentLayer() == None:
+    if not self.iface.mapCanvas().currentLayer():
       self.action.setEnabled(False);
     else:
       extent = self.getLonLatExtent()
