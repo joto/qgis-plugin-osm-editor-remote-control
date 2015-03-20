@@ -45,14 +45,13 @@ class OSMEditorRemoteControlPlugin:
     extent = self.getLonLatExtent()
     url = 'http://localhost:8111/load_and_zoom?left=%f&right=%f&top=%f&bottom=%f' % (extent.xMinimum(), extent.xMaximum(), extent.yMaximum(), extent.yMinimum())
     print "OSMEditorRemoteControl plugin calling " + url
-    #~ try:
-    if True:
+    try:
       f = urllib.urlopen(url, proxies={})
       result = f.read()
       f.close()
       if result.strip().upper() != 'OK':
         self.reportError("OSM reported: %s" % result)
-    #~ except IOError:
-      #~ self.reportError("Could not connect to the OSM editor. Did you start it?")
+    except IOError:
+      self.reportError("Could not connect to the OSM editor. Did you start it?")
   def reportError(self, errorMessage):
       QMessageBox.warning(self.iface.mainWindow(), "OSM Editor Remote Control Plugin", errorMessage)
