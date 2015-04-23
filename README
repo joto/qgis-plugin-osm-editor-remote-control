@@ -3,6 +3,9 @@ This is a QGIS plugin. It gives you a button in QGIS that sends a command to a
 running OSM editor (JOSM and Merkaartor support this) to open the current map
 view and download OSM data into the editor.
 
+The map boundary is computed in EPSG:4326 CRS regardless of current
+windows's or current layer's CRS.
+
 More about the remote control feature:
 http://josm.openstreetmap.de/wiki/Help/Preferences/RemoteControl
 
