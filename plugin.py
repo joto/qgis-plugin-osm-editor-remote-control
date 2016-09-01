@@ -53,6 +53,6 @@ class OSMEditorRemoteControlPlugin:
       if result.strip().upper() != 'OK':
         self.reportError("OSM reported: %s" % result)
     except IOError:
-      self.reportError("Could not connect to the OSM editor. Did you start it?")
+      self.reportError("Could not connect to the OSM editor. Is the OSM editor running?")
   def reportError(self, errorMessage):
       QMessageBox.warning(self.iface.mainWindow(), "OSM Editor Remote Control Plugin", errorMessage)
