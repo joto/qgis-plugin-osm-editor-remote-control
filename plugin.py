@@ -1,10 +1,9 @@
 #!python
+from os.path import join, dirname
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from qgis.core import *
 import urllib
-# initialize Qt resources from file resouces.py
-import resources
 
 # This value is very permissive and unlikely to work in high data-density areas
 # 0.0015 sq deg seems to be reasonable for cities
@@ -14,7 +13,7 @@ class OSMEditorRemoteControlPlugin:
   def __init__(self, iface):
     self.iface = iface
   def initGui(self):
-    self.action = QAction(QIcon(":/plugins/OSMEditorRemoteControl/icon.png"), "OSM Editor Remote Control", self.iface.mainWindow())
+    self.action = QAction(QIcon(join(dirname(__file__), 'josm_icon.svg')), "OSM Editor Remote Control", self.iface.mainWindow())
     self.action.setEnabled(False);
     self.action.setWhatsThis("Send remote control command to OSM editor to load data at current map view")
     self.action.setStatusTip("Send remote control command to OSM editor to load data at current map view")
