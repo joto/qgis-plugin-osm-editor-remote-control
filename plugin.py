@@ -1,6 +1,6 @@
 #!python
 from os.path import join, dirname
-from PyQt4.QtGui import QAction, QIcon, QMessageBox
+from PyQt4.QtGui import QAction, QIcon
 from qgis.core import QgsCoordinateReferenceSystem, QgsCoordinateTransform
 import urllib
 
@@ -74,6 +74,5 @@ class OSMEditorRemoteControlPlugin:
                 'running?')
 
     def report_error(self, error_message):
-        QMessageBox.warning(
-            self.iface.mainWindow(),
+        self.iface.messageBar().pushCritical(
             'OSM Editor Remote Control Plugin', error_message)
