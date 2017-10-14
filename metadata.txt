@@ -11,4 +11,4 @@ tags=osm,openstreetmap,josm
 homepage=https://github.com/joto/qgis-plugin-osm-editor-remote-control
 repository=https://github.com/joto/qgis-plugin-osm-editor-remote-control
 tracker=https://github.com/joto/qgis-plugin-osm-editor-remote-control/issues
-icon=josm_icon.png
+icon=icons/josm_icon.png
