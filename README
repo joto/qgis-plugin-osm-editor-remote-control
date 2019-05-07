@@ -1,4 +1,11 @@
 
+================
+
+This plugin is deprecated and will not work with QGIS version 3.
+Use the QuickOSM plugin instead, it also has a "JOSM" button.
+
+================
+
 This is a QGIS plugin. It gives you a button in QGIS that sends a command to a
 running OSM editor (JOSM and Merkaartor support this) to open the current map
 view and download OSM data into the editor.
